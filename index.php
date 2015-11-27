@@ -179,6 +179,7 @@ function route_request($request) {
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>CMDR JKB's sights from Elite: Dangerous</title>
 	<meta name="author" content="Jean-Karim Bockstael" />
 	<meta name="description" content="Gallery of Elite Dangerous screenshots" />
