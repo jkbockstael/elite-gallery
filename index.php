@@ -184,6 +184,24 @@ function route_request($request) {
 	<title>CMDR JKB's sights from Elite: Dangerous</title>
 	<meta name="author" content="Jean-Karim Bockstael" />
 	<meta name="description" content="Gallery of Elite Dangerous screenshots" />
+	<script type="text/javascript">
+		function handleKeyDown(e) {
+			var keycode = (window.event) ? window.event.keyCode : e.which;
+			var query;
+			switch (keycode) {
+				case 37: // left arrow
+					query = "#overlay_navigation_previous a";
+					break;
+				case 39: // right arrow
+					query = "#overlay_navigation_next a";
+					break;
+				default:
+					return;
+			}
+			document.location = document.querySelector(query).href;
+		}
+		document.onkeydown = handleKeyDown;
+	</script>
 	<style type="text/css">
 		html, body {
 			margin: 0;
