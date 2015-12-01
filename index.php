@@ -189,9 +189,11 @@ function route_request($request) {
 			var keycode = (window.event) ? window.event.keyCode : e.which;
 			var query;
 			switch (keycode) {
+				case 72: // h
 				case 37: // left arrow
 					query = "#overlay_navigation_previous a";
 					break;
+				case 76: // l
 				case 39: // right arrow
 					query = "#overlay_navigation_next a";
 					break;
