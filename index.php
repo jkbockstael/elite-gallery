@@ -74,9 +74,13 @@ function image_exists($filename) {
 // Create a link to a picture using its filename
 // The text parameter is optional, if provided it's used as the link text content
 // if omitted the picture name is used instead.
-function link_to_picture($filename, $text = NULL) {
+function link_to_picture($filename, $showTimestamp = true) {
 	if (!isset($text)) {
-		$text = pretty_print_timestamp(get_timestamp_part($filename)) . ' - ' . pretty_print_name(get_name_part($filename));
+		if ($showTimestamp) {
+			$text = pretty_print_timestamp(get_timestamp_part($filename)) . ' - ' . pretty_print_name(get_name_part($filename));
+		} else {
+			$text = pretty_print_name(get_name_part($filename));
+		}
 	}
 	$link = '<a href="?p=' . substr($filename, 0, -4) . '">';
 	$link .= $text;
