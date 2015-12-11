@@ -103,16 +103,15 @@ function display_image($filename) {
 	// Actual image
 	$img_tag = '<img src="' . $filename . '" alt="' . pretty_print_name(get_name_part($filename)) . '" />';
 	// Overlay navigation
-	$overlay_navigation = '';
+	$overlay_navigation_previous = '';
+	$overlay_navigation_next = '';
 	if ($current_picture_index !== count($picture_files) - 1) {
-		$link_to_next = link_to_picture($picture_files[$current_picture_index + 1], '&gt;');
-		$overlay_navigation .= "\t<div id=\"overlay_navigation_next\">" . $link_to_next . "</div>\n";
+		$overlay_navigation_next .= link_to_picture($picture_files[$current_picture_index + 1], '');
 	}
 	if ($current_picture_index !== 0) {
-		$link_to_previous = link_to_picture($picture_files[$current_picture_index - 1], '&lt;');
-		$overlay_navigation .= "\t<div id=\"overlay_navigation_previous\">" . $link_to_previous . "</div>\n";
+		$overlay_navigation_previous .= link_to_picture($picture_files[$current_picture_index - 1], '');
 	}
-	$image_display = "<div id=\"image_display\">\n\t" . $img_tag . "\n" . $overlay_navigation . "</div>\n";
+	$image_display = "<div id=\"image_display\">\n\t" . $overlay_navigation_previous . "\n" . $img_tag . "\n" . $overlay_navigation_next . "</div>\n";
 	// Image title
 	$title = pretty_print_name(get_name_part($filename));
 	$image_display .= "<div id=\"image_name\">" . $title . "</div>\n";
@@ -191,11 +190,11 @@ function route_request($request) {
 			switch (keycode) {
 				case 72: // h
 				case 37: // left arrow
-					query = "#overlay_navigation_previous a";
+					query = "#image_display a:first-child";
 					break;
 				case 76: // l
 				case 39: // right arrow
-					query = "#overlay_navigation_next a";
+					query = "#image_display a:last-child";
 					break;
 				default:
 					return;
@@ -205,6 +204,9 @@ function route_request($request) {
 		document.onkeydown = handleKeyDown;
 	</script>
 	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
 		html, body {
 			margin: 0;
 			padding: 0;
@@ -221,30 +223,40 @@ function route_request($request) {
 			height: auto;
 			width: auto;
 		}
-		#overlay_navigation_previous, #overlay_navigation_next {
+		#image_display a {
 			background: black;
-			position: absolute;
-			width: 100px;
-			height: 100%;
-			padding: 5px;
-			top: 0;
-			font-size: 8em;
 			opacity: 0;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			text-align: center;
+			width: 100px;
 		}
-		#overlay_navigation_previous:hover, #overlay_navigation_next:hover {
+		#image_display a:hover {
 			opacity: 0.5;
 		}
-		#overlay_navigation_previous a, #overlay_navigation_next a {
-			position: relative;
+		#image_display a:after {
 			top: 40%;
+			content: "";
+			position:absolute;
+			width: 0;
+			height: 0;
+			border-top: 25px solid transparent;
+			border-bottom: 25px solid transparent;
 		}
-		#overlay_navigation_previous {
-			text-align: left;
+		#image_display a:first-child {
 			left: 0;
 		}
-		#overlay_navigation_next {
-			text-align: right;
+		#image_display a:first-child:after {
+			border-right: 50px solid #C06400;
+			left: 20px;
+		}
+		#image_display a:last-child {
 			right: 0;
+		}
+		#image_display a:last-child:after {
+			border-left: 50px solid #C06400;
+			right: 20px;
 		}
 		#image_date, #image_name, #image_description, #image_links {
 			margin: 1em;
