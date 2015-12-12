@@ -132,7 +132,7 @@ function display_image($filename) {
 	// Link to previous image
 	if ($current_picture_index !== 0) {
 		$link_to_previous = link_to_picture($picture_files[$current_picture_index - 1], false);
-		$links .= "<span id=\"image_link_previous\">" . $link_to_previous . "</span>\n\t";
+		$links .= "<span id=\"image_link_previous\" class\"image_link\">" . $link_to_previous . "</span>\n\t";
 	} else {
 		$links .= "<span>&nbsp;</span>";
 	}
@@ -142,7 +142,7 @@ function display_image($filename) {
 	// Links to next image
 	if ($current_picture_index !== count($picture_files) - 1) {
 		$link_to_next = link_to_picture($picture_files[$current_picture_index + 1], false);
-		$links .= "<span id=\"image_link_next\">" . $link_to_next . "</span>\n\t";
+		$links .= "<span id=\"image_link_next\" class\"image_link\">" . $link_to_next . "</span>\n\t";
 	} else {
 		$links .= "<span>&nbsp;</span>";
 	}
@@ -271,10 +271,48 @@ function route_request($request) {
 		#image_date, #image_name, #image_description, #image_links {
 			margin: 1em;
 		}
+		#image_links {
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			 -webkit-flex-wrap: wrap;
+			-ms-flex-wrap: wrap;
+			flex-wrap: wrap;
+		}
 		#image_links span {
-			width: 33%;
+			-webkit-flex: 1 1 33%;
+			-ms-flex: 1 1 33%;
+			flex: 1 1 33%;
 			position: relative;
-			float: left;
+		}
+		@media (max-width: 640px) {
+			#image_links .image_link {
+				-webkit-flex: 1 0 50%;
+				-ms-flex: 1 0 50%;
+				flex: 1 0 50%;
+			}
+			#image_links #image_link_previous {
+				 -webkit-order: 1;
+				-ms-flex-order: 1;
+				order: 1;
+			}
+			#image_links #image_link_index {
+				-webkit-flex: 1 0 100%;
+				-ms-flex: 1 0 100%;
+				flex: 1 0 100%;
+				 -webkit-order: 3;
+				-ms-flex-order: 3;
+				order: 3;
+				margin-top: 1em;
+				text-align: center;
+			}
+			#image_links #image_link_next {
+				-webkit-order: 2;
+				-ms-flex-order: 2;
+				order: 2;
+				text-align: right;
+				padding-right: 1em;
+			}
 		}
 		#image_link_previous {
 			padding-left: 1em;
