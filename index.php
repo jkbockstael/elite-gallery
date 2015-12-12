@@ -132,9 +132,9 @@ function display_image($filename) {
 	// Link to previous image
 	if ($current_picture_index !== 0) {
 		$link_to_previous = link_to_picture($picture_files[$current_picture_index - 1], false);
-		$links .= "<span id=\"image_link_previous\" class\"image_link\">" . $link_to_previous . "</span>\n\t";
+		$links .= "<span id=\"image_link_previous\" class=\"image_link\">" . $link_to_previous . "</span>\n\t";
 	} else {
-		$links .= "<span>&nbsp;</span>";
+		$links .= "<span class=\"image_link\">&nbsp;</span>";
 	}
 	// Link to the image index
 	$link_to_index = '<a href="?p=index">Images index</a>';
@@ -142,9 +142,9 @@ function display_image($filename) {
 	// Links to next image
 	if ($current_picture_index !== count($picture_files) - 1) {
 		$link_to_next = link_to_picture($picture_files[$current_picture_index + 1], false);
-		$links .= "<span id=\"image_link_next\" class\"image_link\">" . $link_to_next . "</span>\n\t";
+		$links .= "<span id=\"image_link_next\" class=\"image_link\">" . $link_to_next . "</span>\n\t";
 	} else {
-		$links .= "<span>&nbsp;</span>";
+		$links .= "<span class=\"image_link\">&nbsp;</span>";
 	}
 	$links .= "</div>\n";
 	$image_display .= $links;
@@ -241,6 +241,10 @@ function route_request($request) {
 			bottom: 0;
 			text-align: center;
 			width: 100px;
+			cursor: pointer;
+			line-height: 0;
+			font-size: 0;
+			color: transparent;
 		}
 		#image_display a:hover {
 			opacity: 0.5;
@@ -291,7 +295,7 @@ function route_request($request) {
 				-ms-flex: 1 0 50%;
 				flex: 1 0 50%;
 			}
-			#image_links #image_link_previous {
+			#image_links .image_link:first-child {
 				 -webkit-order: 1;
 				-ms-flex-order: 1;
 				order: 1;
@@ -306,7 +310,7 @@ function route_request($request) {
 				margin-top: 1em;
 				text-align: center;
 			}
-			#image_links #image_link_next {
+			#image_links .image_link:last-child {
 				-webkit-order: 2;
 				-ms-flex-order: 2;
 				order: 2;
@@ -316,6 +320,9 @@ function route_request($request) {
 		}
 		#image_link_previous {
 			padding-left: 1em;
+			-webkit-justify-content: flex-start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
 		}
 		#image_link_index {
 			text-align: center;
