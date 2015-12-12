@@ -72,11 +72,15 @@ function image_exists($filename) {
 }
 
 // Create a link to a picture using its filename
-// The text parameter is optional, if provided it's used as the link text content
-// if omitted the picture name is used instead.
-function link_to_picture($filename, $text = NULL) {
+// The showTimestamp parameter is optional, if provided it's used to hide the timestamp
+// if omitted the timestamp is automatically added.
+function link_to_picture($filename, $showTimestamp = true) {
 	if (!isset($text)) {
-		$text = pretty_print_timestamp(get_timestamp_part($filename)) . ' - ' . pretty_print_name(get_name_part($filename));
+		if ($showTimestamp) {
+			$text = pretty_print_timestamp(get_timestamp_part($filename)) . ' - ' . pretty_print_name(get_name_part($filename));
+		} else {
+			$text = pretty_print_name(get_name_part($filename));
+		}
 	}
 	$link = '<a href="?p=' . substr($filename, 0, -4) . '">';
 	$link .= $text;
@@ -106,10 +110,10 @@ function display_image($filename) {
 	$overlay_navigation_previous = '';
 	$overlay_navigation_next = '';
 	if ($current_picture_index !== count($picture_files) - 1) {
-		$overlay_navigation_next .= link_to_picture($picture_files[$current_picture_index + 1], '');
+		$overlay_navigation_next .= link_to_picture($picture_files[$current_picture_index + 1]);
 	}
 	if ($current_picture_index !== 0) {
-		$overlay_navigation_previous .= link_to_picture($picture_files[$current_picture_index - 1], '');
+		$overlay_navigation_previous .= link_to_picture($picture_files[$current_picture_index - 1]);
 	}
 	$image_display = "<div id=\"image_display\">\n\t" . $overlay_navigation_previous . "\n" . $img_tag . "\n" . $overlay_navigation_next . "</div>\n";
 	// Image title
@@ -123,19 +127,25 @@ function display_image($filename) {
 	if (!is_null($description)) {
 		$image_display .= "<div id=\"image_description\">" . $description . "</div>\n";
 	}
-	// Links to previous and next images
+	// links to previous, index and next image
 	$links = "<div id=\"image_links\">\n\t";
-	if ($current_picture_index !== count($picture_files) - 1) {
-		$link_to_next = 'Next: ' . link_to_picture($picture_files[$current_picture_index + 1]);
-		$links .= "<div>" . $link_to_next . "</div>\n\t";
-	}
+	// Link to previous image
 	if ($current_picture_index !== 0) {
-		$link_to_previous = 'Previous: ' . link_to_picture($picture_files[$current_picture_index - 1]);
-		$links .= "<div>" . $link_to_previous . "</div>\n\t";
+		$link_to_previous = link_to_picture($picture_files[$current_picture_index - 1], false);
+		$links .= "<span id=\"image_link_previous\">" . $link_to_previous . "</span>\n\t";
+	} else {
+		$links .= "<span>&nbsp;</span>";
 	}
 	// Link to the image index
 	$link_to_index = '<a href="?p=index">Images index</a>';
-	$links .= "<div>" . $link_to_index . "</div>\n";
+	$links .= "<span id=\"image_link_index\">" . $link_to_index . "</span>\n";
+	// Links to next image
+	if ($current_picture_index !== count($picture_files) - 1) {
+		$link_to_next = link_to_picture($picture_files[$current_picture_index + 1], false);
+		$links .= "<span id=\"image_link_next\">" . $link_to_next . "</span>\n\t";
+	} else {
+		$links .= "<span>&nbsp;</span>";
+	}
 	$links .= "</div>\n";
 	$image_display .= $links;
 	return $image_display;
@@ -238,7 +248,7 @@ function route_request($request) {
 		#image_display a:after {
 			top: 40%;
 			content: "";
-			position:absolute;
+			position: absolute;
 			width: 0;
 			height: 0;
 			border-top: 25px solid transparent;
@@ -260,6 +270,49 @@ function route_request($request) {
 		}
 		#image_date, #image_name, #image_description, #image_links {
 			margin: 1em;
+		}
+		#image_links span {
+			width: 33%;
+			position: relative;
+			float: left;
+		}
+		#image_link_previous {
+			padding-left: 1em;
+		}
+		#image_link_index {
+			text-align: center;
+		}
+		#image_link_next {
+			text-align: right;
+			padding-right: 1em;
+		}
+		#image_link_previous:hover:before {
+			border-right-color: #C06400;
+		}
+		#image_link_next:hover:after {
+			border-left-color: #C06400;
+		}
+		#image_link_previous:before {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			left: 0;
+			border-top: 6px solid transparent;
+			border-right: 12px solid #B32900;
+			border-bottom: 6px solid transparent;
+			top: 3px;
+		}
+		#image_link_next:after {
+			content: "";
+			position: absolute;
+			width: 0;
+			height: 0;
+			right: 0;
+			border-top: 6px solid transparent;
+			border-left: 12px solid #B32900;
+			border-bottom: 6px solid transparent;
+			top: 3px;
 		}
 		body {
 			background-color: black;
